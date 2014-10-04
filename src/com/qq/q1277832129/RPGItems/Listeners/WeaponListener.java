@@ -6,12 +6,16 @@ package com.qq.q1277832129.RPGItems.Listeners;/*
 
 import com.qq.q1277832129.RPGItems.API.ItemShell;
 import com.qq.q1277832129.RPGItems.Exception.ItemsException;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
@@ -23,7 +27,9 @@ public class WeaponListener implements Listener{
         try {
             Player p = (Player)event.getDamager();
             ItemShell is = getShell(p);
-            event.setDamage(event.getDamage() +is.getLevel("力量"));
+            if(is.getLevel("力量")!=0)
+            event.setDamage(is.getLevel("力量"));
+
         }catch(Exception e){}
         }
     }
@@ -42,6 +48,22 @@ public class WeaponListener implements Listener{
                 }
             }catch (Exception e){}
         }
+    }
+    @EventHandler
+    void buffdamage(EntityDamageByEntityEvent event){
+      if((event.getDamager() instanceof Player)||(event.getEntity() instanceof LivingEntity)){
+          try {
+              Player p = (Player) event.getDamager();
+              ItemShell is = getShell(p);
+              for(int i = 2;i<19;i++){
+                 if(is.getLevel(i+"")!=0){
+                     LivingEntity le = (LivingEntity) event.getEntity();
+                     le.addPotionEffect(new PotionEffect(PotionEffectType.getById(i),is.getLevel(i+""),1));
+                 }
+
+              }
+          }catch(Exception e){}
+      }
     }
     ItemShell getShell(Player p) throws ItemsException {
         return ItemShell.getShell(p.getItemInHand(),p);
