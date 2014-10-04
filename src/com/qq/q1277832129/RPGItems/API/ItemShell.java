@@ -8,11 +8,14 @@ import com.qq.q1277832129.RPGItems.Exception.ItemsException;
 import com.qq.q1277832129.RPGItems.Exception.NoMetaException;
 import com.qq.q1277832129.RPGItems.Exception.NoSuchLine;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemShell {
     private ItemStack item;
@@ -50,7 +53,11 @@ public class ItemShell {
     }
     public synchronized void addString(String str){
         ItemMeta meta = item.getItemMeta();
-        List<String> list = meta.getLore();
+        List<String> list = null;
+        if(meta.hasLore())
+        list = meta.getLore();
+        else
+        list = new ArrayList<String>();
         list.add(str);
         meta.setLore(list);
         item.setItemMeta(meta);
@@ -95,6 +102,11 @@ public class ItemShell {
 
         }
        return has;
+    }
+    public void setName(String str){
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(str);
+        item.setItemMeta(meta);
     }
     @Override
     public int hashCode(){
