@@ -28,7 +28,7 @@ public class ItemShell {
         if((item == null)||(item.getType()== Material.AIR)) throw new ItemsException(holder,"不能没有任何东西");
         return new ItemShell(item,holder);
     }
-    
+
     public String getString(int line) throws NoMetaException, NoSuchLine {
         if(!this.item.hasItemMeta()) throw new NoMetaException(holder,"该物品没有属性");
         ItemMeta meta = this.item.getItemMeta();
@@ -109,6 +109,16 @@ public class ItemShell {
         meta.setDisplayName(str);
         item.setItemMeta(meta);
     }
+    public void replaceLine(String str,String newer) throws NoSuchLine, NoMetaException {
+        for (int i = 0; i < getLoreSize() ; i++) {
+            String line = getString(i);
+            if(line.contains(str)) {
+                setStringAt(i,newer);
+                break;
+            }
+        }
+    }
+
     @Override
     public int hashCode(){
         return item.hashCode();
