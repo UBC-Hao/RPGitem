@@ -38,9 +38,11 @@ public class ItemShell {
         if(num-1 < line) throw new NoSuchLine(holder,"未知的错误");
         return list.get(line);
     }
+
     public Player getHolder(){
         return this.holder;
     }
+
     public ItemStack getItem(){
         return this.item;
     }
@@ -52,6 +54,7 @@ public class ItemShell {
        meta.setLore(list);
        item.setItemMeta(meta);
     }
+
     public synchronized void addString(String str){
         ItemMeta meta = item.getItemMeta();
         List<String> list = null;
@@ -63,6 +66,7 @@ public class ItemShell {
         meta.setLore(list);
         item.setItemMeta(meta);
     }
+
     public int getLevel(String str) throws NoSuchLine, NoMetaException {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
@@ -77,6 +81,7 @@ public class ItemShell {
         }
         return 0;
     }
+
     public int getLoreSize() throws NoMetaException, NoSuchLine {
         if(!this.item.hasItemMeta()) throw new NoMetaException(holder,"该物品没有属性");
         ItemMeta meta = this.item.getItemMeta();
@@ -84,6 +89,7 @@ public class ItemShell {
         List<String> list = meta.getLore();
         return list.size();
     }
+
     public synchronized boolean setLevel(String str,int level) throws NoSuchLine, NoMetaException {
       //返回是否拥有这个属性 如果有则返回true 没有就返回false
         //如果没有 会自动为你添加属性
@@ -100,16 +106,18 @@ public class ItemShell {
             }
         }
         if(!has){
-
+           addString(str+":"+level);
         }
        return has;
     }
+
     public void setName(String str){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(str);
         item.setItemMeta(meta);
     }
-    public void replaceLine(String str,String newer) throws NoSuchLine, NoMetaException {
+
+    public synchronized void replaceLine(String str,String newer) throws NoSuchLine, NoMetaException {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
             if(line.contains(str)) {
@@ -123,10 +131,12 @@ public class ItemShell {
     public int hashCode(){
         return item.hashCode();
     }
+
     @Override
     public String toString(){
         return item.toString();
     }
+
     @Override
     public boolean equals(Object obj){
        return obj instanceof ItemShell?((ItemShell)obj).getItem().equals(this.item):false;
