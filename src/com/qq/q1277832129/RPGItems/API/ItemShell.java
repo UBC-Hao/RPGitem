@@ -71,8 +71,8 @@ public class ItemShell {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
             if(line.contains(str)) {
-                if(line.contains(":")) {
-                    String strs[] = line.split(":");
+                if(line.contains(": ")) {
+                    String strs[] = line.split(": ");
                     if(strs[0].contains(str)){
                         return Integer.parseInt(strs[1]);
                     }
@@ -97,16 +97,16 @@ public class ItemShell {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
             if(line.contains(str)) {
-                if(line.contains(":")) {
+                if(line.contains(": ")) {
                     has = true;
-                    String strs[] = line.split(":");
-                    String newer = strs[0]+":"+level;
+                    String strs[] = line.split(": ");
+                    String newer = strs[0]+": "+level;
                     setStringAt(i,newer);
                 }
             }
         }
         if(!has){
-           addString(str+":"+level);
+           addString(str+": "+level);
         }
        return has;
     }
