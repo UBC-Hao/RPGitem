@@ -1,0 +1,9 @@
+  public static List<Location> buildCircle(Location center, int radius, float precision)
+  {
+    List ret = new ArrayList();
+    for (float i = precision; i < 6.283185307179586D; i += precision) {
+      ret.add(new Location(center.getWorld(), Math.cos(i) * radius + center.getX(), center.getY(), Math.sin(i) * radius + center.getZ()));
+    }
+    return ret;
+  }
+  
