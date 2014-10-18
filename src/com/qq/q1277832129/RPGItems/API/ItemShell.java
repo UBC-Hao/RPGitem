@@ -174,7 +174,8 @@ public class ItemShell {
         return map;
     }
     //给物品强化,如果没有鉴定过则抛出错误
-    public void levelUp(){
+    public void levelUp() throws ItemsException {
+       if(!hasLooked()) throw new ItemsException(holder,"该物品未鉴定");
        if(!search("物品等级:")){
            this.addString("物品等级: 1");
            return;
