@@ -14,9 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemShell {
     private ItemStack item;
@@ -30,13 +28,16 @@ public class ItemShell {
         return new ItemShell(item,holder);
     }
 
-    public String getString(int line) throws NoMetaException, NoSuchLine {
-        if(!this.item.hasItemMeta()) throw new NoMetaException(holder,"该物品没有属性");
+    public String getString(int line){
+
         ItemMeta meta = this.item.getItemMeta();
-        if(!this.item.getItemMeta().hasLore()) throw new NoMetaException(holder,"该物品没有属性");
-        List<String> list = meta.getLore();
+        List<String> list=null;
+       if(meta.hasLore())
+        list = meta.getLore();
+        else
+       list=new ArrayList<String>();
         int num = list.size();
-        if(num-1 < line) throw new NoSuchLine(holder,"未知的错误");
+        if(line>num-1) return "";
         return list.get(line);
     }
 
@@ -68,7 +69,7 @@ public class ItemShell {
         item.setItemMeta(meta);
     }
 
-    public int getLevel(String str) throws NoSuchLine, NoMetaException {
+    public int getLevel(String str){
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
             if(line.contains(str)) {
@@ -83,15 +84,15 @@ public class ItemShell {
         return 0;
     }
 
-    public int getLoreSize() throws NoMetaException, NoSuchLine {
-        if(!this.item.hasItemMeta()) throw new NoMetaException(holder,"该物品没有属性");
+    public int getLoreSize(){
+        if(!this.item.hasItemMeta()) return 0;
         ItemMeta meta = this.item.getItemMeta();
-        if(!this.item.getItemMeta().hasLore()) throw new NoMetaException(holder,"该物品没有属性");
+        if(!this.item.getItemMeta().hasLore()) return 0;
         List<String> list = meta.getLore();
         return list.size();
     }
 
-    public synchronized boolean setLevel(String str,int level) throws NoSuchLine, NoMetaException {
+    public synchronized boolean setLevel(String str,int level){
       //返回是否拥有这个属性 如果有则返回true 没有就返回false
         //如果没有 会自动为你添加属性
        boolean has = false;
@@ -117,7 +118,14 @@ public class ItemShell {
         meta.setDisplayName(str);
         item.setItemMeta(meta);
     }
-
+    public <T> boolean search(T t){
+        if(!item.hasItemMeta()) return false;
+        if(!item.getItemMeta().hasLore()) return false;
+        for(String str:item.getItemMeta().getLore()){
+            if (str.contains(t.toString())) return true;
+        }
+        return false;
+    }
     public synchronized void replaceLine(String str,String newer) throws NoSuchLine, NoMetaException {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
@@ -127,10 +135,58 @@ public class ItemShell {
             }
         }
     }
-
-    public void randomIntensify(){
-
+    public void clearLore(){
+        item.setItemMeta(null);
     }
+    //随机给物品添加属性 注意 会清空以前的属性的哦
+    public void randomState()
+    {
+       Random rand = new Random();
+       int index = rand.nextInt(5);
+       this.clearLore();
+       int copy = index;
+       HashMap<String,Integer> map = new HashMap<String, Integer>();
+       for(Map.Entry<String,Sender> entry : Main.map.entrySet()){
+           if(rand.nextInt(10)<copy)
+               map.put(entry.getKey(),entry.getValue().random());
+       }
+       for(Map.Entry<String,Integer> en : map.entrySet()){
+           if(index--<0) break;
+
+               this.setLevel(en.getKey(),en.getValue());
+
+       }
+    }
+    //返回物品是否已经经过鉴定
+    public boolean hasLooked(){
+        return !search("未鉴定");
+    }
+    //获取该物品属性表
+    public HashMap<String,Integer> getLevelMap(){
+        HashMap<String,Integer> map = new HashMap<String, Integer>();
+        for(Map.Entry<String,Sender> ma:Main.map.entrySet()){
+            if(!search(ma.getKey())){
+                continue;
+            }
+            int level = getLevel(ma.getKey());
+            map.put(ma.getKey(),level);
+        }
+        return map;
+    }
+    //给物品强化,如果没有鉴定过则抛出错误
+    public void levelUp(){
+       if(!search("物品等级:")){
+           this.addString("物品等级: 1");
+           return;
+       }
+
+       int level = this.getLevel("物品等级:");
+       this.setLevel("物品等级: ",level+1);
+       for(Map.Entry<String,Integer> ent : this.getLevelMap().entrySet()){
+           setLevel(ent.getKey(),ent.getValue()+1);
+       }
+    }
+
     @Override
     public int hashCode(){
         return item.hashCode();
