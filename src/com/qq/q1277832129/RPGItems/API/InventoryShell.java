@@ -20,7 +20,6 @@ public class InventoryShell {
     public void add(ItemStack itemStack){
         inv.addItem(itemStack);
     }
-
     public boolean take(int slot,int amount,String title){
         //如果能成功拿走就返回true 否则返回false
         //这个位置的物品的名字 如果不包含title 那么也会返回false

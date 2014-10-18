@@ -7,6 +7,7 @@ package com.qq.q1277832129.RPGItems.API;/*
 import com.qq.q1277832129.RPGItems.Exception.ItemsException;
 import com.qq.q1277832129.RPGItems.Exception.NoMetaException;
 import com.qq.q1277832129.RPGItems.Exception.NoSuchLine;
+import com.qq.q1277832129.RPGItems.Main;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -127,6 +128,9 @@ public class ItemShell {
         }
     }
 
+    public void randomIntensify(){
+
+    }
     @Override
     public int hashCode(){
         return item.hashCode();
