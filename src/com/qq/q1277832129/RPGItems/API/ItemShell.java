@@ -8,6 +8,7 @@ import com.qq.q1277832129.RPGItems.Exception.ItemsException;
 import com.qq.q1277832129.RPGItems.Exception.NoMetaException;
 import com.qq.q1277832129.RPGItems.Exception.NoSuchLine;
 import com.qq.q1277832129.RPGItems.Main;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -135,6 +136,12 @@ public class ItemShell {
             }
         }
     }
+    //给物品添加类型信息 若没有类型 则不产生任何反应
+    public void addType(){
+        if(Main.config.contains(item.getTypeId()+"")){
+            this.addString(ChatColor.DARK_RED+"物品类型:"+Main.config.getString(item.getTypeId()+""));
+        }
+    }
     public void clearLore(){
         item.setItemMeta(null);
     }
@@ -147,8 +154,10 @@ public class ItemShell {
        int copy = index;
        HashMap<String,Integer> map = new HashMap<String, Integer>();
        for(Map.Entry<String,Sender> entry : Main.map.entrySet()){
-           if(rand.nextInt(10)<copy)
-               map.put(entry.getKey(),entry.getValue().random());
+           if(entry.getValue().allow(item.getTypeId())) {
+               if (rand.nextInt(10) < copy)
+                   map.put(entry.getKey(), entry.getValue().random());
+           }
        }
        for(Map.Entry<String,Integer> en : map.entrySet()){
            if(index--<0) break;
