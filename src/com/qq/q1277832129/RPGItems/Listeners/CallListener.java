@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -121,10 +122,41 @@ public class CallListener implements Listener{
       }
     }
     if(type.contains("宝石镶嵌")){
-
+      try {
+          ItemStack item = p.getInventory().getItem(8);
+          if (item == null
+                  ?
+                  true : !(item.getItemMeta().hasDisplayName())) {
+              p.sendMessage(ChatColor.RED + "你需要将宝石放在最后一格");
+              return;
+          }
+          String name = item.getItemMeta().getDisplayName();
+          String type1 = name.split("-")[1];
+          if(!name.contains("镶嵌宝石")){
+              p.sendMessage(ChatColor.RED + "你需要将宝石放在最后一格");
+              return;
+          }
+          if(!hand.search("钻孔")){
+              p.sendMessage("你的武器不支持打孔");
+              return;
+          }
+          if(this.takeLastSlot(p,1,"镶嵌宝石")){
+              hand.replaceLine("钻孔",type1);
+              p.sendMessage(ChatColor.GREEN+"成功镶嵌");
+          }else{
+              p.sendMessage(ChatColor.RED+"请将镶嵌宝石放最后一格");
+          }
+      }
+      finally {
+          exit(p);
+      }
     }
     if(type.contains("装备洗炼")){
-
+        if(takeLastSlot(p,1,"洗炼石")){
+            hand.randomState();
+        }else{
+            p.sendMessage("请将洗炼石放最后一格");
+        }
     }
     if(type.contains("装备维修")){
 
@@ -141,6 +173,7 @@ public class CallListener implements Listener{
         InventoryShell is = new InventoryShell(p);
         return is.take(7,amount,name);
     }
+
     void exit(Player player){
         player.closeInventory();
     }

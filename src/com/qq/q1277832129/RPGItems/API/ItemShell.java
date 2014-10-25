@@ -169,6 +169,7 @@ public class ItemShell {
                this.setLevel(en.getKey(),en.getValue());
 
        }
+       addString("打孔口");
     }
     //返回物品是否已经经过鉴定
     public boolean hasLooked(){

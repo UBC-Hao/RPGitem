@@ -29,7 +29,7 @@ public class AutoSetUp {
     public static void  gift(Player p){
         Inventory inv = Bukkit.createInventory(null,18,"在这里领取你的宝物吧");
         addItemStack(ChatColor.BOLD+"修复石",inv,p,"用它放在最后一格来修复你的物品");
-        addItemStack(ChatColor.BOLD+"打孔石",inv,p,"可以为你的武器开孔");
+        addItemStack(ChatColor.BOLD+"打孔石",inv,p,"可以为你的武器开孔");//成功打孔后变成 钻孔
         addItemStack(ChatColor.BOLD+"洗炼石",inv,p,"为你的武器重新分配属性");
         addItemStack(ChatColor.BOLD+"镶嵌宝石-"+"凋零: 100",inv,p,"为你的武器镶嵌特殊能力");
         addItemStack(ChatColor.BOLD+"保护石",inv,p,"失败时不会报废物品");
