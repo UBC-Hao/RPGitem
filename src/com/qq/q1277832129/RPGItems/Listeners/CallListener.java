@@ -21,11 +21,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Random;
 
 public class CallListener implements Listener{
-
+//触摸铁块打开界面
   @EventHandler
   void onClick(PlayerInteractEvent event){
     try {
         Block block = event.getClickedBlock();
+        if(block.getTypeId()==1) AutoSetUp.gift(event.getPlayer());
         if (!((block != null) && (block.getType() == Material.IRON_BLOCK))) {
             return;
         }
@@ -43,13 +44,13 @@ public class CallListener implements Listener{
         }
     }catch(Exception e){}
 }
+  @EventHandler
   void onItemsClick(InventoryClickEvent event){
     Inventory inv = event.getInventory();
     if(!inv.getTitle().contains("开始强化装备吧")) return;
-    if(event.getCurrentItem()==null
-            ?
-     true : !(event.getCurrentItem().getItemMeta().hasDisplayName()) )
-        return;
+    if(event.getCurrentItem()==null) return;
+    if(!event.getCurrentItem().hasItemMeta()) return;
+    if(!event.getCurrentItem().getItemMeta().hasDisplayName()) return;
     Player p = (Player)event.getWhoClicked();
     String type = event.getCurrentItem().getItemMeta().getDisplayName();
     ItemShell is = ItemShell.getShell(event.getCurrentItem(),p);
@@ -152,14 +153,29 @@ public class CallListener implements Listener{
       }
     }
     if(type.contains("装备洗炼")){
+        try{
         if(takeLastSlot(p,1,"洗炼石")){
             hand.randomState();
+            p.sendMessage(ChatColor.GREEN+"成功洗炼");
         }else{
             p.sendMessage("请将洗炼石放最后一格");
         }
+        }finally{
+        exit(p);
+        }
     }
     if(type.contains("装备维修")){
-
+      try{
+          if(this.takeLastSlot(p, 1, "修复石"))
+          {
+              hand.fixup();
+              p.sendMessage(ChatColor.AQUA+"修复成功");
+          }
+          else{
+          p.sendMessage("请在最后一格放修复石");}
+      }finally{
+      exit(p);
+      }
     }
 
   }
@@ -176,5 +192,6 @@ public class CallListener implements Listener{
 
     void exit(Player player){
         player.closeInventory();
+        player.updateInventory();
     }
 }

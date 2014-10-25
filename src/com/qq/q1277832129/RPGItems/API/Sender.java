@@ -12,7 +12,7 @@ public class Sender {
     int max;
     int min;
     List<Integer> list;
-    public Sender(int max,int min,List list){
+    public Sender(int min,int max,List<Integer> list){
         this.max=max;
         this.min=min;
         this.list=list;
@@ -24,7 +24,9 @@ public class Sender {
         return min;
     }
     public boolean allow(int id){
+        
         return list.contains(id);
+       
     }
     public int random(){
         Random rand = new Random();

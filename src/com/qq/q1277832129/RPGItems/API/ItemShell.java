@@ -158,14 +158,17 @@ public class ItemShell {
        int copy = index;
        HashMap<String,Integer> map = new HashMap<String, Integer>();
        for(Map.Entry<String,Sender> entry : Main.map.entrySet()){
+           
            if(entry.getValue().allow(item.getTypeId())) {
-               if (rand.nextInt(10) < copy)
+               System.out.print("allow");
+               if (rand.nextInt(10) > copy)
+                   
                    map.put(entry.getKey(), entry.getValue().random());
            }
        }
        for(Map.Entry<String,Integer> en : map.entrySet()){
            if(index--<0) break;
-
+               
                this.setLevel(en.getKey(),en.getValue());
 
        }
@@ -200,7 +203,7 @@ public class ItemShell {
            return;
        }
 
-       int level = this.getLevel("物品等级:");
+       int level = this.getLevel("物品等级");
        this.setLevel("物品等级: ",level+1);
        for(Map.Entry<String,Integer> ent : this.getLevelMap().entrySet()){
            setLevel(ent.getKey(),ent.getValue()+1);
