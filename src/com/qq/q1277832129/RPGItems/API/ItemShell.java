@@ -24,8 +24,7 @@ public class ItemShell {
         this.item=item;
         this.holder=holder;
     }
-    public static ItemShell getShell(ItemStack item,Player holder) throws ItemsException{
-        if((item == null)||(item.getType()== Material.AIR)) throw new ItemsException(holder,"不能没有任何东西");
+    public static ItemShell getShell(ItemStack item,Player holder){
         return new ItemShell(item,holder);
     }
 
@@ -127,7 +126,8 @@ public class ItemShell {
         }
         return false;
     }
-    public synchronized void replaceLine(String str,String newer) throws NoSuchLine, NoMetaException {
+    //替换首次出现的那一行
+    public synchronized void replaceLine(String str,String newer) {
         for (int i = 0; i < getLoreSize() ; i++) {
             String line = getString(i);
             if(line.contains(str)) {
@@ -146,6 +146,10 @@ public class ItemShell {
         item.setItemMeta(null);
     }
     //随机给物品添加属性 注意 会清空以前的属性的哦
+    public void fixup(){
+        short s = 0;
+        this.item.setDurability(s);
+    }
     public void randomState()
     {
        Random rand = new Random();
@@ -182,11 +186,16 @@ public class ItemShell {
         }
         return map;
     }
+    //
+    public void broke(){
+       this.clearLore();
+       this.getItem().setType(Material.STONE);
+    }
     //给物品强化,如果没有鉴定过则抛出错误
     public void levelUp() throws ItemsException {
        if(!hasLooked()) throw new ItemsException(holder,"该物品未鉴定");
        if(!search("物品等级:")){
-           this.addString("物品等级: 1");
+           this.addString("物品等级: 0");
            return;
        }
 
