@@ -8,6 +8,7 @@ import com.qq.q1277832129.RPGItems.API.AutoSetUp;
 import com.qq.q1277832129.RPGItems.API.InventoryShell;
 import com.qq.q1277832129.RPGItems.API.ItemShell;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -193,5 +194,10 @@ public class CallListener implements Listener{
     void exit(Player player){
         player.closeInventory();
         player.updateInventory();
+        effect(player);
+    }
+    void effect(Player p){
+        p.getWorld().playEffect(p.getLocation(), Effect.MOBSPAWNER_FLAMES,3);
+
     }
 }

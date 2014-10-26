@@ -19,12 +19,16 @@ public class Main extends JavaPlugin {
 
 public static FileConfiguration config;
 public static HashMap<String,Sender> map= new HashMap<String,Sender>();
+public static List<String> other;//属性: 100.0%
+public static List<String> special;//属性: +5.0-100.0;
 
     @Override
     public void onEnable(){
        
        config=getConfig();
        List<String> list = config.getStringList("stats");
+       this.other = config.getStringList("other");
+       this.special=config.getStringList("special");
        //stats:
        //  - "stat:min-max-id-id````````"
        for(String pointer:list){

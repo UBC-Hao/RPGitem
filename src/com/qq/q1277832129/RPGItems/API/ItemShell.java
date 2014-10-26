@@ -76,7 +76,19 @@ public class ItemShell {
                 if(line.contains(": ")) {
                     String strs[] = line.split(": ");
                     if(strs[0].contains(str)){
-                        return Integer.parseInt(strs[1]);
+                        if((!Main.other.contains(strs[0]))&&(!Main.special.contains(strs[0])))
+                        {
+                            return Integer.parseInt(strs[1]);
+                        }else if(Main.other.contains(strs[0])){
+                            //xxx.0
+                            String lev = strs[1].split(".")[0].replace(" ","").replace(":","").replace(".0","");
+                            return Integer.parseInt(lev);
+
+                        }else if(Main.special.contains(strs[0])){
+                            //+XXX-XXX
+                            String lev = strs[1].split("-")[0].replace("+","").replace(" ","").replace(".0","");
+                            return Integer.parseInt(lev);
+                        }
                     }
                 }
             }
@@ -102,7 +114,15 @@ public class ItemShell {
                 if(line.contains(": ")) {
                     has = true;
                     String strs[] = line.split(": ");
-                    String newer = strs[0]+": "+level;
+                    String newer = null;
+                    if((!Main.other.contains(strs[0]))&&(!Main.special.contains(strs[0]))){
+                       newer = strs[0]+": "+level;
+                    }else if(Main.other.contains(strs[0])){
+                       newer = strs[0]+": "+level+".0"+"%";
+                    }else if(Main.special.contains(strs[0])){
+                       newer = strs[0]+": "+("+"+level+".0-"+(level+5)+".0");
+                    }
+
                     setStringAt(i,newer);
                 }
             }
@@ -186,6 +206,7 @@ public class ItemShell {
                 continue;
             }
             int level = getLevel(ma.getKey());
+            if(level !=0)
             map.put(ma.getKey(),level);
         }
         return map;
